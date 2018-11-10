@@ -142,7 +142,9 @@
                                     <p class="card-category">Time-series graphs</p>
                                 </div>
                                 <div class="card-body ">
-                                      <div id="graph"></div>
+                                      <div id="wrist_graph"></div>
+                                      <div id="elbow_graph"></div>
+                                      <div id="emg_graph"></div>
                                 </div>
                                 <div class="card-footer ">
                                     <hr>
@@ -348,107 +350,13 @@ function rand0() {
 
    }
 
+////////Global PLOT Values///////
+var plot_height = 250;
 
-// var time = new Date();
-
-// var wrist_rotation = {
-//  x: [],
-//  y: [],
-//  mode: 'lines',
-//  line: {
-//    color: '#80CAF6',
-//    shape: 'spline'
-//  },
-//  name: 'Wrist Rotation'
-// }
-
-// var elbow_flexion = {
-//  x: [],
-//  y: [],
-//  mode: 'lines',
-//  line: {
-//    color: '	#FF0000',
-//    shape: 'spline'
-//  },
-//  name: 'Elbow Flexion'
-// }
-
-// var emg_voltage = {
-//  x: [],
-//  y: [],
-//  xaxis: 'x2',
-//  yaxis: 'y2',
-//  mode: 'lines',
-//  line: {
-//    color: '#DF56F1',
-//  shape: 'spline'
-// },
-// name: 'EMG Voltage'
-// };
-
-
-// var layout = {
-//  title: "Patient Data",
-//  xaxis0: {
-//    type: 'date',
-//    domain: [0, 1],
-//    showticklabels: false
-//  },
-//  yaxis0: {domain: [0.5,1]},
-//  xaxis1: {
-//       title:'Time',
-//       type: 'date',
-//       domain: [0, 1],
-//       showticklabels: false,
-//       titlefont: {
-//           family:'Courier New, monospace',
-//           size:18,
-//           color:'#7f7f7f'
-//       }
-//   },
-//   yaxis1: {
-//       title:'Voltage        Degrees            .',
-//       domain: [0.5,1],
-//       titlefont: {
-//           family:'Courier New, monospace',
-//           size:18,
-//           color:'#7f7f7f'
-//       }
-//   },
-//  xaxis2: {
-//    type: 'date',
-//    anchor: 'y2',
-//    domain: [0, 1]
-//  },
-//  yaxis2: {
-//    anchor: 'x2',
-//    domain: [0, 0.3]},
-// }
-
-// var data = [wrist_rotation,elbow_flexion,emg_voltage];
-
-// Plotly.plot('graph', data, layout);
-
-// var cnt = 0;
-
-// var interval = setInterval(function() {
-
-//  var time = new Date();
-
-//  var update = {
-//    x: [[time], [time], [time]],
-//    y: [[rand0()], [rand1()], [rand2()]]
-//  }
-
-//  Plotly.extendTraces('graph', update, [0,1,2])
-
-//  if(cnt === 100) clearInterval(interval);
-// }, 200);
-
-
-var trace1 = {
-  x: [1, 2, 3],
-  y: [4, 10, 40],
+////////WRIST DATA///////
+var wrist_rotation = {
+  x: [],
+  y: [],
   mode: "lines",
   line: {
     color: '#DF56F1',
@@ -457,24 +365,72 @@ var trace1 = {
   name: "Wrist Rotation"
 };
 
-var trace2 = {
-  x: [20, 30, 40],
-  y: [50, 60, 70],
-  xaxis: 'x2',
-  yaxis: 'y2',
+var wrist_data = [wrist_rotation];
+
+var wrist_layout = {
+    title: "Wrist Rotation",
+    height: plot_height,
+    xaxis: {
+    title: 'Time',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 14,
+      color: '#7f7f7f'
+    }
+  },
+  yaxis: {
+    title: 'Degrees',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 14,
+      color: '#7f7f7f'
+    }
+  }
+};
+
+Plotly.newPlot('wrist_graph', wrist_data, wrist_layout);
+
+////////ELBOW DATA///////
+var elbow_flexion = {
+  x: [],
+  y: [],
   mode: 'lines',
   line: {
    color: '	#FF0000',
    shape: 'spline'
   },
-  name: "elbow flexion"
+  name: "Elbow flexion"
 };
 
-var trace3 = {
-  x: [300, 400, 500],
-  y: [600, 700, 800],
-  xaxis: 'x3',
-  yaxis: 'y3',
+var elbow_data = [elbow_flexion];
+
+var elbow_layout = {
+    title: "Elbow Flexion Data",
+    height: plot_height,
+    xaxis: {
+    title: 'Time',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 14,
+      color: '#7f7f7f'
+    }
+  },
+  yaxis: {
+    title: 'Degrees',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 14,
+      color: '#7f7f7f'
+    }
+  }
+};
+
+Plotly.newPlot('elbow_graph', elbow_data, elbow_layout);
+
+////////EMG DATA///////
+var emg_voltage = {
+  x: [],
+  y: [],
   mode: 'lines',
   line: {
    color: '#80CAF6',
@@ -483,23 +439,52 @@ var trace3 = {
   name: "EMG Voltage"
 };
 
-var data = [trace1, trace2, trace3];
+var emg_data = [emg_voltage];
 
-var layout = {
-    title: "Real Time Patient Data",
-    y2: {
-        title:'Voltage',
-        domain: [0.5,1],
-        titlefont: {
-            family:'Courier New, monospace',
-            size:18,
-            color:'#7f7f7f'
-        }
-    },
-    grid: {rows: 4, columns: 1, pattern: 'independent'},
-    height: 1000,
+var emg_layout = {
+    title: "EMG Voltage",
+    height: plot_height,
+    xaxis: {
+    title: 'Time',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 14,
+      color: '#7f7f7f'
+    }
+  },
+  yaxis: {
+    title: 'Voltage',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 14,
+      color: '#7f7f7f'
+    }
+  }
 };
 
-Plotly.newPlot('graph', data, layout);
+Plotly.newPlot('emg_graph', emg_data, emg_layout);
+
+////////DATA UPDATES///////
+var cnt = 0;
+var interval = setInterval(function() {
+    var time = new Date();
+    var wrist_update = {
+        x: [[time]],
+        y: [[rand0()]]
+    }
+    var elbow_update = {
+        x: [[time]],
+        y: [[rand1()]]
+    }
+    var emg_update = {
+        x: [[time]],
+        y: [[rand2()]]
+    }
+    Plotly.extendTraces('wrist_graph', wrist_update, [0]);
+    Plotly.extendTraces('elbow_graph', elbow_update, [0]);
+    Plotly.extendTraces('emg_graph', emg_update, [0]);
+    if(cnt === 100) clearInterval(interval);
+    },
+    200);
 </script>
 </html>
