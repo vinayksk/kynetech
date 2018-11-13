@@ -388,7 +388,7 @@ var max_flexion = 0;
 $(document).ready(function() {
     function set_new_value() {
         $('#elbow_max_flexion').text("Max Flexion: ".concat(max_flexion));
-        if (rand1() < max_flexion) {
+        if (rand1() > max_flexion) {
             max_flexion = rand1();
         }
     }
