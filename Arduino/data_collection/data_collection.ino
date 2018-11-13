@@ -5,11 +5,6 @@
 #include <Adafruit_Sensor.h>  // not used in this demo but required!
 
 #include "arduino_secrets.h" 
-
-#define ROTARY_ANGLE_SENSOR A0 //Use analog pin A0 for the Rotary Angle Sensor
-#define ADC_REF 3.3 //Reference voltage of ADC is 3.3v
-#define FULL_ANGLE 300.0 //Full value of the rotary angle is 300 degrees
-
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
@@ -141,20 +136,20 @@ void loop()
   int sensorValue = analogRead(EMG_PIN);
   float voltage = sensorValue * (5.0 / 1023.0);
 
-  /* Potentiometer data collection */
-  int angle = getDegrees();
+  /* Flex sensor data collection*/
+  //int flexADC = analogRead(FLEX_PIN);
+  //float flexV = flexADC * VCC / 1023.0;
+  //float flexR = R_DIV * (VCC / flexV - 1.0);
+  //float angle = map(flexR, STRAIGHT_RESISTANCE, BEND_RESISTANCE, 0, 90.0);
 
-  // /* Flex sensor data collection*/
-  // int flexADC = analogRead(FLEX_PIN);
-  // float flexV = flexADC * VCC / 1023.0;
-  // float flexR = R_DIV * (VCC / flexV - 1.0);
-  // float angle = map(flexR, STRAIGHT_RESISTANCE, BEND_RESISTANCE, 0, 90.0);
+  // Read the value of the rotary angle sensor in degrees
+  float angle = (3*(getDegrees() - 4))/5;
 
   if (angle < 0) {
     angle = 0;
   }
   
-  if (abs(prev_value - angle) < 5) {
+  if (abs(prev_value - angle ) < 5) {
     values = String(roll) + "," + String(angle) + "," + String(voltage);
     httpRequest(values);
   }
@@ -164,16 +159,18 @@ void loop()
   delay(300);
 }
 
+
 int getDegrees()
 {
    //Read the raw sensor value
-    int sensor_value = analogRead(ROTARY_ANGLE_SENSOR);
+    int sensor_value = analogRead(A0);
 
     //Convert the sensor reading to degrees and return that value
-    float voltage = (float)sensor_value * ADC_REF / 1023; 
-    float degrees = (voltage * FULL_ANGLE) / ADC_REF; 
+    float voltage = (float)sensor_value * 5 / 1023; 
+    float degrees = (voltage * 300) / 5; 
     return degrees;
 }
+
 
 void httpRequest(String data) {
   // close any connection before send a new request.
