@@ -146,9 +146,17 @@
                                     <div id="wrist_graph"></div>
                                     <div id="wrist_statistics">
                                         <p id="wrist_max_rotation">Max Rotation: </p>
+                                        <p id="wrist_min_rotation">Min Rotation: </p>
                                     </div>
                                     <div id="elbow_graph"></div>
-                                      <div id="emg_graph"></div>
+                                    <div id="elbow_statistics"></div>
+                                        <p id="elbow_max_flexion">Max Flexion: </p>
+                                    </div>
+                                    <div id="emg_graph"></div>
+                                    <div id="emg_statistics">
+                                        <p id="max_flex_voltage">Max Flex Sustain Voltage: </p>
+                                        <p id="max_flex_time">Max Flex Sustain Time: </p>
+                                    </div>
                                 </div>
                                 <div class="card-footer ">
                                     <hr>
@@ -362,7 +370,60 @@ $(document).ready(function() {
             largest_rotation = rand0();
         }
     }
-    var inst = setInterval(set_new_value, 1000);
+    var inst = setInterval(set_new_value, 200);
+});
+
+var least_rotation = 0;
+$(document).ready(function() {
+    function set_new_value() {
+        $('#wrist_min_rotation').text("Min Rotation: ".concat(least_rotation));
+        if (rand0() < least_rotation) {
+            least_rotation = rand0();
+        }
+    }
+    var inst = setInterval(set_new_value, 200);
+});
+
+var max_flexion = 0;
+$(document).ready(function() {
+    function set_new_value() {
+        $('#elbow_max_flexion').text("Max Flexion: ".concat(max_flexion));
+        if (rand1() < max_flexion) {
+            max_flexion = rand1();
+        }
+    }
+    var inst = setInterval(set_new_value, 200);
+});
+
+var max_flex_voltage = 0;
+var max_flex_time = 0;
+var past_values = [];
+$(document).ready(function() {
+    function set_new_value() {
+        $('#max_flex_voltage').text("Max Flex Sustain Voltage: ".concat(max_flex_sustain_voltage));
+        $('#max_flex_time').text("Max Flex Sustain Time: ".concat(max_flex_sustain_time));
+        var curr_value = rand2()
+        if (curr_value > 1) {
+            if (past_values.length >= 1) {
+                if ((past_values[past_values.length - 1] + 0.2 > curr_value) || (past_values[past_values.length - 1] - 0.2 < curr_value)) {
+                    past_values.push(curr_value);
+                    if (200 * (past_values.length - 1) > max_flex_time) {
+                        var sum = 0;
+                        for(var i = 0; i < past_values.length; i++){
+                            sum += past_values[i]; //don't forget to add the base
+                        }
+                        var avg = sum/past_values.length;
+                        max_flex_voltage = avg;
+                        max_flex_time = (past_values.length - 1) * 200;
+                    }
+                }
+                else {
+                    past_values = [];
+                }
+            }
+        }
+    }
+    var inst = setInterval(set_new_value, 200);
 });
 
 ////////Global PLOT Values///////
