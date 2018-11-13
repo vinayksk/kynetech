@@ -28,6 +28,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <!-- https://plot.ly/javascript/streaming/ -->
     <script src="{{url_for('static', filename='he.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -143,6 +144,9 @@
                                 </div>
                                 <div class="card-body ">
                                       <div id="wrist_graph"></div>
+                                            <div id="wrist_statistics">
+                                                <p id="wrist_max_rotation">Max Rotation: </p>
+                                            </div>
                                       <div id="elbow_graph"></div>
                                       <div id="emg_graph"></div>
                                 </div>
@@ -349,6 +353,17 @@ function rand0() {
     return parseFloat(d[d.length-1].split(',')[2]);
 
    }
+
+var largest_rotation = 0;
+$(document).ready(function() {
+    function set_new_value() {
+        $('#wrist_max_rotation').text("Max Rotation: ".concat(largest_rotation));
+        if (rand0() > largest_rotation) {
+            largest_rotation = rand0();
+        }
+    }
+    var inst = setInterval(set_new_value, 1000);
+});
 
 ////////Global PLOT Values///////
 var plot_height = 250;
